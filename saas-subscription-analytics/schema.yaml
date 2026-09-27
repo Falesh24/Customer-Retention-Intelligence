@@ -1,0 +1,72 @@
+# B2B SaaS subscription analytics -- the shape of this dataset, ready to run.
+#
+#   pip install misata
+#   misata generate --config schema.yaml --output-dir ./data
+#
+# Change a row count, add a column, rename a table: every foreign key
+# still resolves, because referential integrity is a guarantee here
+# rather than something the generator happens to get right.
+#
+# This file describes the STRUCTURE. The aggregate facts in the
+# shipped CSVs (order totals reconciling to the cent, the Q4 lift,
+# the Pareto tail) are separate declarations, and they are the actual
+# point of Misata. Adding them looks like this:
+#
+#   https://www.misata.studio/docs
+
+name: saas_subscription_analytics
+seed: 20260722
+tables:
+  accounts:
+    rows: 1200
+    columns:
+      account_id: {type: int, unique: true, min: 1, max: 12000}
+      company_name: {type: text}
+      industry: {type: categorical, choices: ["Education", "Financial Services", "Healthcare", "Logistics", "Manufacturing", "Retail", "Software"]}
+      country: {type: categorical, choices: ["Australia", "Brazil", "Canada", "France", "Germany", "India", "Japan", "Netherlands", "United Kingdom", "United States"]}
+      employee_count: {type: int, min: 3, max: 2232}
+      signup_date: {type: datetime, start: '2023-01-01', end: '2025-09-26'}
+      plan: {type: categorical, choices: ["Business", "Enterprise", "Growth", "Starter"]}
+  invoices:
+    rows: 14500
+    columns:
+      invoice_id: {type: int, unique: true, min: 1, max: 145000}
+      account_id: {type: foreign_key, references: "accounts.account_id"}
+      invoice_date: {type: datetime, start: '2025-01-01', end: '2025-12-30'}
+      amount: {type: float, min: 9.8, max: 27604}
+      status: {type: categorical, choices: ["open", "paid", "uncollectible", "void"]}
+  subscriptions:
+    rows: 1200
+    columns:
+      subscription_id: {type: int, unique: true, min: 1, max: 12000}
+      account_id: {type: foreign_key, references: "accounts.account_id"}
+      seats: {type: int, min: 1, max: 318}
+      status: {type: categorical, choices: ["active", "churned", "past_due", "trialing"]}
+      mrr: {type: float, min: 12, max: 25122}
+      started_on: {type: text}
+      ended_on: {type: text}
+  support_tickets:
+    rows: 5600
+    columns:
+      ticket_id: {type: int, min: 253, max: 999996}
+      account_id: {type: foreign_key, references: "accounts.account_id"}
+      opened_at: {type: datetime, start: '2025-01-01', end: '2025-12-27'}
+      priority: {type: categorical, choices: ["high", "low", "normal", "urgent"]}
+      category: {type: categorical, choices: ["Billing", "Bug Report", "Feature Request", "Integrations", "Onboarding", "Performance"]}
+      satisfaction_score: {type: float, min: 1, max: 5}
+      resolution_hours: {type: float, min: 1.1, max: 166.8}
+      resolved_at: {type: datetime, start: '2025-01-01', end: '2025-12-31'}
+  users:
+    rows: 21884
+    columns:
+      user_id: {type: int, unique: true, min: 1, max: 218840}
+      account_id: {type: foreign_key, references: "accounts.account_id"}
+      full_name: {type: text}
+      role: {type: categorical, choices: ["admin", "member", "viewer"]}
+      email: {type: text}
+
+relationships:
+  - {parent: accounts, child: invoices, parent_col: account_id, child_col: account_id}
+  - {parent: accounts, child: subscriptions, parent_col: account_id, child_col: account_id}
+  - {parent: accounts, child: support_tickets, parent_col: account_id, child_col: account_id}
+  - {parent: accounts, child: users, parent_col: account_id, child_col: account_id}
