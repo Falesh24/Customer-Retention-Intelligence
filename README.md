@@ -24,7 +24,7 @@ The project analyses customer behaviour, subscriptions, revenue and support acti
 
 ## Dashboard
 
-📊 **[View the Interactive Tableau Dashboard](https://public.tableau.com/app/profile/falesh.sahu/viz/SaaSCustomerAnalyticsRetentionOverview/SaaSCustomerAnalyticsRetentionOverview)**
+📊 **[View the Interactive Tableau Dashboard](https://public.tableau.com/app/profile/falesh.sahu/viz/SaaSCustomerAnalyticsRetentionOverview/SaaSCustomerAnalyticsRetentionOverview?publish=yes&utm_source=chatgpt.com)**
 
 ## Tech Stack
 
