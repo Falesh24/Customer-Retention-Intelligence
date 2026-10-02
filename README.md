@@ -39,6 +39,7 @@ The statistical signals were mapped directly into a deterministic scoring matrix
 
 ## What I Built
 
+- **Data Pipeline Integrity** — Implemented strict runtime data validation using **Pydantic V2** schemas to isolate structural anomalies, data drift, and negative metrics prior to statistical calculations.
 - **PostgreSQL + SQL** — Data modelling, Validation and Customer 360
 - **Python** — Exploratory and Statistical analysis
 - **Statistical Testing** — Chi-square and Mann–Whitney U tests
